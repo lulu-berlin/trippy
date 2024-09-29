@@ -1,11 +1,8 @@
-use std::{
-    io::{self, Stdout, Write},
-    time::Duration,
-};
+use std::io::{self, Stdout, Write};
 
 use crossterm::{
     cursor,
-    event::{poll, read, DisableMouseCapture, EnableMouseCapture, Event},
+    event::{DisableMouseCapture, EnableMouseCapture},
     execute, queue,
     style::{self},
     terminal::{
@@ -30,7 +27,6 @@ impl Tiles {
         execute!(
             stdout,
             EnterAlternateScreen,
-            EnableMouseCapture,
             cursor::Hide,
             terminal::Clear(terminal::ClearType::All)
         )?;
@@ -98,12 +94,6 @@ impl Tiles {
 impl Drop for Tiles {
     fn drop(&mut self) {
         disable_raw_mode().unwrap();
-        execute!(
-            self.stdout,
-            LeaveAlternateScreen,
-            DisableMouseCapture,
-            cursor::Show
-        )
-        .unwrap();
+        execute!(self.stdout, LeaveAlternateScreen, cursor::Show).unwrap();
     }
 }
